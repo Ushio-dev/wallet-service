@@ -23,7 +23,7 @@ public class Account {
     @Column(precision = 19, scale = 2, nullable = false)
     private BigDecimal balance = BigDecimal.ZERO;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
