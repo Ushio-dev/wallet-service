@@ -3,6 +3,9 @@ package com.franco.walletservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "Client")
 @Getter
@@ -20,4 +23,7 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String email;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Account> account = new ArrayList<Account>();
 }

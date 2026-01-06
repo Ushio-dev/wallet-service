@@ -28,6 +28,7 @@ public class Transaction {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @Column(name = "target_account_id")
-    private Long targetAccountId;
+    @OneToOne
+    @JoinColumn(name = "target_account_id")
+    private Account targetAccountId;
 }
