@@ -10,11 +10,14 @@ import com.franco.walletservice.model.Transaction;
 import com.franco.walletservice.model.TransactionType;
 import com.franco.walletservice.repository.AccountRepository;
 import com.franco.walletservice.repository.TransactionRepository;
+import com.franco.walletservice.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +26,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -55,7 +59,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .type(TransactionType.TRANSFER)
                 .account(senderAccount)
                 .timestamp(LocalDateTime.now())
-                .targetAccountId(receiverAccount)
+                .targetAccount(receiverAccount)
                 .build();
 
         transaction = transactionRepository.save(transaction);
@@ -63,9 +67,27 @@ public class TransactionServiceImpl implements TransactionService {
         return TransactionResponseDTO.builder()
                 .id(transaction.getId())
                 .accountId(transaction.getAccount().getId())
-                .targetAccountId(transaction.getTargetAccountId().getId())
+                .targetAccountId(transaction.getTargetAccount().getId())
                 .type(transactionDTO.getType())
                 .amount(transaction.getAmount())
                 .build();
+    }
+
+    @Override
+    public List<TransactionResponseDTO> transactionHistory(Long accountId) {
+        List<Transaction> transactions = transactionRepository.findByAccountUserId(accountId);
+        List<TransactionResponseDTO> transactionResponseDTOS = new ArrayList<>();
+
+        transactions.forEach(transaction -> {
+            transactionResponseDTOS.add(new TransactionResponseDTO(
+                    transaction.getId(),
+                    transaction.getAmount(),
+                    transaction.getType(),
+                    transaction.getAccount().getId(),
+                    transaction.getTargetAccount().getId())
+            );
+        });
+
+        return transactionResponseDTOS;
     }
 }
