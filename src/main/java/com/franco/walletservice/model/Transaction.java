@@ -25,11 +25,11 @@ public class Transaction {
 
     private LocalDateTime timestamp;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "target_account_id")
-    private Account targetAccountId;
+    private Account targetAccount;
 }
