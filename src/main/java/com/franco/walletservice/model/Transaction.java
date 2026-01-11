@@ -20,6 +20,7 @@ public class Transaction {
     // averiguar mas sobre como tomar la cantidad de dinero en la transaccion
     private BigDecimal amount;
 
+    @Enumerated(EnumType.STRING)
     private TransactionType type;
 
     private LocalDateTime timestamp;
